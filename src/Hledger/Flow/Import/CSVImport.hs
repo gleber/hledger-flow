@@ -202,7 +202,7 @@ statementSpecificRulesFiles csvSrc importDirs = do
   if ((T.take 3 srcSuffix) == "rfo")
     then
     do
-      let srcSpecificFilename = Turtle.fromText srcSuffix <.> "rules"
+      let srcSpecificFilename = T.unpack srcSuffix <.> "rules"
       map (</> srcSpecificFilename) [accountDir importDirs, bankDir importDirs, importDir importDirs]
     else []
 

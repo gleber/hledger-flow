@@ -233,7 +233,7 @@ basenameLine path = case (Turtle.textToLine $ Turtle.format Turtle.fp $ Turtle.b
   Just bn -> return bn
 
 buildFilename :: [Turtle.Line] -> T.Text -> TurtlePath
-buildFilename identifiers ext = Turtle.fromText (T.intercalate "-" (map Turtle.lineToText identifiers)) <.> ext
+buildFilename identifiers ext = T.unpack (T.intercalate "-" (map Turtle.lineToText identifiers)) Turtle.<.> (T.unpack ext)
 
 shellToList :: Turtle.Shell a -> Turtle.Shell [a]
 shellToList files = Turtle.fold files Fold.list
@@ -252,7 +252,7 @@ writeTextMap :: Map.Map TurtlePath T.Text -> IO ()
 writeTextMap = Map.foldlWithKey (\a k v -> a <> Turtle.writeTextFile k v) (return ())
 
 changeExtension :: T.Text -> TurtlePath -> TurtlePath
-changeExtension ext path = (Turtle.dropExtension path) <.> ext
+changeExtension ext path = (Turtle.dropExtension path) Turtle.<.> (T.unpack ext)
 
 changePathAndExtension :: TurtlePath -> T.Text -> TurtlePath -> TurtlePath
 changePathAndExtension newOutputLocation newExt = (changeOutputPath newOutputLocation) . (changeExtension newExt)
@@ -265,7 +265,7 @@ listOwners :: HasBaseDir o => o -> Turtle.Shell TurtlePath
 listOwners opts = fmap Turtle.basename $ lsDirs $ (turtleBaseDir opts) </> "import"
 
 intPath :: Integer -> TurtlePath
-intPath = Turtle.fromText . (Turtle.format Turtle.d)
+intPath = T.unpack . (Turtle.format Turtle.d)
 
 includeYears :: TChan LogMessage -> TurtlePath -> IO [Integer]
 includeYears ch includeFile = do

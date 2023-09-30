@@ -50,7 +50,7 @@ generateReports' opts ch = do
   channelOutLn ch wipMsg
   owners <- Turtle.single $ shellToList $ listOwners opts
   ledgerEnvValue <- Turtle.need "LEDGER_FILE" :: IO (Maybe T.Text)
-  let hledgerJournal = fromMaybe (turtleBaseDir opts </> allYearsFileName) $ fmap Turtle.fromText ledgerEnvValue
+  let hledgerJournal = fromMaybe (turtleBaseDir opts </> allYearsFileName) $ fmap T.unpack ledgerEnvValue
   hledgerJournalExists <- Turtle.testfile hledgerJournal
   _ <- if not hledgerJournalExists then Turtle.die $ Turtle.format ("Unable to find journal file: "%Turtle.fp%"\nIs your LEDGER_FILE environment variable set correctly?") hledgerJournal else return ()
   let journalWithYears = journalFile opts []
